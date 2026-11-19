@@ -22,7 +22,7 @@
     return window.Highlight.escape(s == null ? "" : s);
   }
   function subjectOf(p) {
-    return SUBJECT_BY_ID[p.subject] || { name: p.subject, color: "#a3e635", short: p.subject, icon: "folder" };
+    return SUBJECT_BY_ID[p.subject] || { name: p.subject, color: "#a44b2b", short: p.subject, icon: "folder" };
   }
   function codesOf(p) {
     return p.code && p.code.length ? p.code : [];
@@ -218,10 +218,10 @@
       "</header>";
 
     html += '<section class="stats">' +
-      statCard("Practicals", total, "library", "#a3e635") +
-      statCard("Subjects", SUBJECTS.length, "folder", "#60a5fa") +
-      statCard("Completed", counts.completed, "check", "#4ade80") +
-      statCard("Bookmarked", counts.bookmarks, "bookmark", "#facc15") +
+      statCard("Practicals", total, "library", "#c65d3a") +
+      statCard("Subjects", SUBJECTS.length, "folder", "#4a6b85") +
+      statCard("Completed", counts.completed, "check", "#71816a") +
+      statCard("Bookmarked", counts.bookmarks, "bookmark", "#b07b2e") +
       "</section>";
 
     html += '<div class="grid-2">' +
