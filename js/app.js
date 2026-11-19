@@ -325,9 +325,10 @@
       if (range && (p.n < range.min || p.n > range.max)) return false;
       if (terms.length) {
         const hay = [
-          p.title, p.aim, p.definition, p.theory, p.output, p.result, p.conclusion,
+          p.title, p.aim, p.problem, p.definition, p.theory, p.output, p.result, p.conclusion,
           subjectOf(p).name, subjectOf(p).short,
           (p.notes || []).join(" "),
+          (p.viva || []).join(" "),
           codesOf(p).map((c) => c.src).join(" "),
           codesOf(p).map((c) => c.file).join(" "),
           p.n
@@ -441,8 +442,10 @@
       "</header>";
     html += '<div class="grid-2"><section class="panel">' + progressBar(done, list.length, "Completed in this subject") + "</section>";
     html += '<section class="panel"><div class="panel-head"><h2>Source</h2></div><div class="kv">' +
-      "<div><span>PDF pages</span><strong>" + s.pdfPages + "</strong></div>" +
-      "<div><span>Journal pages</span><strong>" + s.journalPages + "</strong></div>" +
+      (s.pdfPages
+        ? '<div><span>PDF pages</span><strong>' + s.pdfPages + "</strong></div>" +
+          '<div><span>Journal pages</span><strong>' + s.journalPages + "</strong></div>"
+        : '<div><span>Source</span><strong>Authored reference</strong></div>') +
       "<div><span>Practicals</span><strong>" + list.length + "</strong></div>" +
       "<div><span>With source code</span><strong>" + list.filter(hasCode).length + "</strong></div>" +
       "</div></section></div>";
@@ -513,6 +516,7 @@
     }
 
     html += sectionHTML("Aim", prose(p.aim));
+    html += sectionHTML("Problem statement", prose(p.problem));
     html += sectionHTML("Objectives", bullets(p.objectives));
     html += sectionHTML("Requirements", bullets(p.requirements));
     html += sectionHTML("Definition", prose(p.definition));
@@ -530,6 +534,7 @@
     html += sectionHTML("Explanation", prose(p.explanation));
     html += sectionHTML("Result", prose(p.result));
     html += sectionHTML("Conclusion", prose(p.conclusion));
+    html += sectionHTML("Viva questions", bullets(p.viva));
     html += sectionHTML("Important notes", bullets(p.notes), "notes");
 
     html += '<nav class="prevnext">' +
@@ -616,11 +621,14 @@
       "<div><span>Academic year</span><strong>" + esc(DATA.student.year) + "</strong></div>" +
       "</div>" +
       '<div class="file-list">' +
-      SUBJECTS.map((s) =>
-        '<div class="file-row"><span class="file-ic" style="color:' + s.color + '">' + window.Icons.get("fileText", 16) + "</span>" +
+      SUBJECTS.map((s) => {
+        const meta = s.pdfPages
+          ? s.pdfPages + " PDF pages · " + s.journalPages + " journal pages · " + (DATA[s.id] || []).length + " practicals"
+          : "Authored reference · " + (DATA[s.id] || []).length + " practicals";
+        return '<div class="file-row"><span class="file-ic" style="color:' + s.color + '">' + window.Icons.get("fileText", 16) + "</span>" +
         '<span class="file-name">' + esc(s.pdf) + "</span>" +
-        '<span class="file-meta">' + s.pdfPages + " PDF pages · " + s.journalPages + " journal pages · " + (DATA[s.id] || []).length + " practicals</span></div>"
-      ).join("") +
+        '<span class="file-meta">' + esc(meta) + "</span></div>";
+      }).join("") +
       "</div>" +
       "<p class=\"hint\">The original PDF files are kept in the project folder and are never modified.</p>" +
       "</section>";
